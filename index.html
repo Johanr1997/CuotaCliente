@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cuota Cliente</title>
+<title>Cuota Cliente - iShop</title>
 
 <style>
 /* ESTILO BLANCO MINIMALISTA DE APPLE */
@@ -27,7 +27,7 @@ body {
     padding: 35px 28px;
     border-radius: 20px;
     width: 100%;
-    max-width: 480px;
+    max-width: 520px;
     box-sizing: border-box;
     box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.04);
     border: 1px solid #d2d2d7;
@@ -94,7 +94,6 @@ select:focus, input[type="number"]:focus {
     border-color: #0071e3;
 }
 
-/* ESTILO CASILLA SÓLO DISPOSITIVOS */
 .checkbox-group {
     display: flex;
     align-items: center;
@@ -110,7 +109,7 @@ select:focus, input[type="number"]:focus {
     width: 18px;
     height: 18px;
     cursor: pointer;
-    accent-color: #0071e3; /* Color azul Apple para el check */
+    accent-color: #0071e3;
 }
 
 .checkbox-group label {
@@ -141,7 +140,6 @@ button:hover {
     background: #0077ed;
 }
 
-/* CONTENEDOR DE OPCIONES RECOMENDADAS */
 #capacidad-total {
     margin-top: 20px;
     font-size: 15px;
@@ -225,7 +223,6 @@ button:hover {
     margin-bottom: 4px;
 }
 
-/* ESTILO PARA EL LOGO AL FINAL */
 .logo-final {
     max-width: 110px;
     height: auto;
@@ -239,7 +236,6 @@ button:hover {
     opacity: 0.9;
 }
 
-/* RESPONSIVE MÓVIL */
 @media (max-width: 480px) {
     body { padding: 12px; background: #ffffff; }
     .container { padding: 16px 8px; box-shadow: none; border: none; }
@@ -257,7 +253,7 @@ button:hover {
 
     <div class="form-group">
         <label>¿Qué estás buscando?</label>
-        <select id="filtro-categoria">
+        <select id="filtro-categoria" onchange="actualizarOpcionesAgregados()">
             <option value="todos">Cualquier dispositivo</option>
             <option value="iPhone">iPhone</option>
             <option value="MacBook">Mac</option>
@@ -273,7 +269,22 @@ button:hover {
         </div>
         <div class="form-group">
             <label>Plazo (Meses)</label>
-            <input type="number" id="meses" value="24" min="1">
+            <input type="number" id="meses" value="24" min="1" onchange="actualizarOpcionesAgregados()">
+        </div>
+    </div>
+
+    <div class="form-inline">
+        <div class="form-group">
+            <label>Garantía Garex</label>
+            <select id="garex-opcion">
+                <option value="ninguno">Sin Garex</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Seguro iShop</label>
+            <select id="seguro-opcion">
+                <option value="ninguno">Sin Seguro</option>
+            </select>
         </div>
     </div>
 
@@ -293,8 +304,7 @@ button:hover {
 
 <script>
 // ==========================================
-// APARTADO DE DESCUENTOS ACTIVOS (Modifica aquí en temporada de promo)
-// Pon el monto exacto en dólares que deseas REBAJAR de cada modelo.
+// APARTADO DE DESCUENTOS ACTIVOS
 // ==========================================
 const descuentosActivos = {
       "iPhone 13 - 128GB": 50,         
@@ -304,7 +314,7 @@ const descuentosActivos = {
       "MacBook Air 13 M5 - 1TB": 100,         
 };
 
-// BASE DE DATOS DE PRODUCTOS (Precios Regulares)
+// BASE DE DATOS DE PRODUCTOS
 const productos = [
     { categoria: "iPhone", nombre: "iPhone 13 - 128GB", precio: 589 },
     { categoria: "iPhone", nombre: "iPhone 15 - 128GB", precio: 899 },
@@ -330,7 +340,7 @@ const productos = [
     { categoria: "iPad", nombre: "iPad Mini A17 Pro - 128GB", precio: 689 },
     { categoria: "iPad", nombre: "iPad Air 11 M4 - 128GB", precio: 799 },
     { categoria: "iPad", nombre: "iPad Air 11 M4 - 256GB", precio: 939 },
-    { categoria: "iPad", font_size: "14px", nombre: "iPad Air 13 M4 - 128GB", precio: 1079 },
+    { categoria: "iPad", nombre: "iPad Air 13 M4 - 128GB", precio: 1079 },
     { categoria: "iPad", nombre: "iPad Air 13 M4 - 256GB", precio: 1209 },
     { categoria: "iPad", nombre: "iPad Pro 11 M5 - 256GB", precio: 1349 },
     { categoria: "iPad", nombre: "iPad Pro 11 M5 - 512GB", precio: 1609 },
@@ -342,47 +352,133 @@ const productos = [
     { categoria: "Watch", nombre: "Apple Watch Series 11 - 46mm", precio: 619 }
 ];
 
-// BASE DE DATOS DE ACCESORIOS
-const accesoriosDB = {
-    iPhone: [
-        { nombre: "Case Apple", precio: 69, esProteccion: true },
-        { nombre: "Protector de Vidrio", precio: 42, esProteccion: true },
-        { nombre: "Cargador Apple 40W", precio: 49 },
-        { nombre: "Cargador MagSafe", precio: 54 },
-        { nombre: "Batería MagSafe", precio: 74 }
+// MATRIZ DE CONFIGURACIÓN GAREX BASE EN TUS DATOS
+const dbGarex = {
+    "iPhone": [
+        { mesesAdic: 12, rangos: [{ hasta: 250, costo: 45 }, { hasta: 500, costo: 75 }, { hasta: 1000, costo: 115 }, { hasta: 1500, costo: 145 }, { hasta: 2000, costo: 185 }, { hasta: 2500, costo: 225 }] },
+        { mesesAdic: 24, rangos: [{ hasta: 250, costo: 75 }, { hasta: 500, costo: 115 }, { hasta: 1000, costo: 175 }, { hasta: 1500, costo: 225 }, { hasta: 2000, costo: 285 }, { hasta: 2500, costo: 340 }] }
     ],
-    MacBook: [
-        { nombre: "Funda", precio: 39, esProteccion: true },
-        { nombre: "HardCase", precio: 59, esProteccion: true },
-        { nombre: "Multiport Hub USB-C", precio: 74 },
-        { nombre: "Office 365", precio: 94 },
-        { nombre: "Teclado numérico", precio: 49 },
-        { nombre: "Magic Mouse", precio: 119 }
-    ],
-    iPad: [
-        { nombre: "Smart Folio Case", precio: 59, esProteccion: true },
-        { nombre: "Vidrio Temperado", precio: 39, esProteccion: true },
-        { nombre: "Apple Pencil Pro", precio: 192 }
-    ],
-    Watch: [
-        { nombre: "Protector de Pantalla", precio: 29, esProteccion: true },
-        { nombre: "Cargador Rápido Watch", precio: 32 },
-        { nombre: "Correa Adicional", precio: 64 }
+    "Otros": [ // Mac, iPad, Watch, Audio
+        { mesesAdic: 36, rangos: [{ hasta: 50, costo: 15 }, { hasta: 100, costo: 25 }, { hasta: 250, costo: 45 }, { hasta: 500, costo: 75 }, { hasta: 1000, costo: 115 }, { hasta: 1500, costo: 155 }, { hasta: 2000, costo: 195 }, { hasta: 2500, costo: 240 }, { hasta: 3000, costo: 290 }, { hasta: 5000, costo: 390 }] }
     ]
 };
 
-const opcionesAirPods = [
-    { nombre: "AirPods 4", precio: 179 },
-    { nombre: "AirPods 4 con ANC", precio: 229 },
-    { nombre: "AirPods Max", precio: 689 },
-    { nombre: "AirPods Pro 3", precio: 329 }
-];
+// MATRIZ DE SEGUROS SEGÚN MATRIZ DE DATOS PROPORCIONADA
+const dbSeguros = {
+    "iPhone": [
+        { tipo: "Robo y Hurto", meses: 12, rangos: [{ hasta: 450, c: 40 }, { hasta: 650, c: 64 }, { hasta: 900, c: 90 }, { hasta: 1250, c: 95 }, { hasta: 1625, c: 140 }, { hasta: 2000, c: 175 }, { hasta: 2375, c: 210 }, { hasta: 3000, c: 255 }] },
+        { tipo: "Robo y Hurto", meses: 18, rangos: [{ hasta: 450, c: 55 }, { hasta: 650, c: 90 }, { hasta: 900, c: 125 }, { hasta: 1250, c: 135 }, { hasta: 1625, c: 195 }, { hasta: 2000, c: 245 }, { hasta: 2375, c: 295 }, { hasta: 3000, c: 360 }] },
+        { tipo: "Robo y Hurto", meses: 24, rangos: [{ hasta: 450, c: 65 }, { hasta: 650, c: 105 }, { hasta: 900, c: 140 }, { hasta: 1250, c: 150 }, { hasta: 1625, c: 220 }, { hasta: 2000, c: 280 }, { hasta: 2375, c: 340 }, { hasta: 3000, c: 410 }] },
+        { tipo: "Robo + Accidental", meses: 12, rangos: [{ hasta: 450, c: 80 }, { hasta: 650, c: 130 }, { hasta: 900, c: 185 }, { hasta: 1250, c: 195 }, { hasta: 1625, c: 280 }, { hasta: 2000, c: 355 }, { hasta: 2375, c: 430 }, { hasta: 3000, c: 520 }] },
+        { tipo: "Robo + Accidental", meses: 18, rangos: [{ hasta: 450, c: 115 }, { hasta: 650, c: 180 }, { hasta: 900, c: 255 }, { hasta: 1250, c: 275 }, { hasta: 1625, c: 395 }, { hasta: 2000, c: 495 }, { hasta: 2375, c: 600 }, { hasta: 3000, c: 730 }] },
+        { tipo: "Robo + Accidental", meses: 24, rangos: [{ hasta: 450, c: 130 }, { hasta: 650, c: 205 }, { hasta: 900, c: 290 }, { hasta: 1250, c: 310 }, { hasta: 1625, c: 450 }, { hasta: 2000, c: 565 }, { hasta: 2375, c: 690 }, { hasta: 3000, c: 835 }] }
+    ],
+    "MacBook": [
+        { tipo: "Accidental", meses: 12, rangos: [{ hasta: 800, c: 45 }, { hasta: 1000, c: 60 }, { hasta: 1500, c: 75 }, { hasta: 2000, c: 130 }, { hasta: 2500, c: 155 }, { hasta: 4250, c: 195 }, { hasta: 5000, c: 280 }, { hasta: 6250, c: 340 }] },
+        { tipo: "Accidental", meses: 18, rangos: [{ hasta: 800, c: 65 }, { hasta: 1000, c: 85 }, { hasta: 1500, c: 110 }, { hasta: 2000, c: 180 }, { hasta: 2500, c: 215 }, { hasta: 4250, c: 275 }, { hasta: 5000, c: 390 }, { hasta: 6250, c: 475 }] },
+        { tipo: "Accidental", meses: 24, rangos: [{ hasta: 800, c: 70 }, { hasta: 1000, c: 100 }, { hasta: 1500, c: 125 }, { hasta: 2000, c: 210 }, { hasta: 2500, c: 245 }, { hasta: 4250, c: 310 }, { hasta: 5000, c: 445 }, { hasta: 6250, c: 540 }] },
+        { tipo: "Robo + Accidental", meses: 12, rangos: [{ hasta: 800, c: 70 }, { hasta: 1000, c: 95 }, { hasta: 1500, c: 130 }, { hasta: 2000, c: 215 }, { hasta: 2500, c: 280 }, { hasta: 4250, c: 355 }, { hasta: 5000, c: 510 }, { hasta: 6250, c: 615 }] },
+        { tipo: "Robo + Accidental", meses: 18, rangos: [{ hasta: 800, c: 95 }, { hasta: 1000, c: 130 }, { hasta: 1500, c: 180 }, { hasta: 2000, c: 305 }, { hasta: 2500, c: 390 }, { hasta: 4250, c: 500 }, { hasta: 5000, c: 710 }, { hasta: 6250, c: 865 }] },
+        { tipo: "Robo + Accidental", meses: 24, rangos: [{ hasta: 800, c: 110 }, { hasta: 1000, c: 150 }, { hasta: 1500, c: 210 }, { hasta: 2000, c: 345 }, { hasta: 2500, c: 450 }, { hasta: 4250, c: 570 }, { hasta: 5000, c: 810 }, { hasta: 6250, c: 985 }] }
+    ],
+    "iPad": [
+        { tipo: "Robo y Hurto", meses: 12, rangos: [{ hasta: 450, c: 25 }, { hasta: 650, c: 40 }, { hasta: 900, c: 55 }, { hasta: 1250, c: 65 }, { hasta: 1625, c: 85 }, { hasta: 2000, c: 105 }, { hasta: 2375, c: 125 }, { hasta: 2625, c: 145 }, { hasta: 2875, c: 160 }, { hasta: 3125, c: 175 }, { hasta: 3500, c: 190 }, { hasta: 3875, c: 210 }, { hasta: 5000, c: 285 }] },
+        { tipo: "Robo y Hurto", meses: 18, rangos: [{ hasta: 450, c: 35 }, { hasta: 650, c: 55 }, { hasta: 900, c: 75 }, { hasta: 1250, c: 90 }, { hasta: 1625, c: 116 }, { hasta: 2000, c: 145 }, { hasta: 2375, c: 175 }, { hasta: 2625, c: 200 }, { hasta: 2875, c: 220 }, { hasta: 3125, c: 240 }, { hasta: 3500, c: 265 }, { hasta: 3875, c: 295 }, { hasta: 5000, c: 400 }] },
+        { tipo: "Robo y Hurto", meses: 24, rangos: [{ hasta: 450, c: 40 }, { hasta: 650, c: 60 }, { hasta: 900, c: 85 }, { hasta: 1250, c: 100 }, { hasta: 1625, c: 135 }, { hasta: 2000, c: 170 }, { hasta: 2375, c: 200 }, { hasta: 2625, c: 230 }, { hasta: 2875, c: 255 }, { hasta: 3125, c: 275 }, { hasta: 3500, c: 305 }, { hasta: 3875, c: 340 }, { hasta: 5000, c: 455 }] },
+        { tipo: "Servicio Robo", meses: 12, rangos: [{ hasta: 450, c: 50 }, { hasta: 650, c: 80 }, { hasta: 900, c: 110 }, { hasta: 1250, c: 130 }, { hasta: 1625, c: 170 }, { hasta: 2000, c: 210 }, { hasta: 2375, c: 260 }, { hasta: 2625, c: 295 }, { hasta: 2875, c: 325 }, { hasta: 3125, c: 350 }, { hasta: 3500, c: 390 }, { hasta: 3875, c: 435 }, { hasta: 5000, c: 570 }] },
+        { tipo: "Servicio Robo", meses: 18, rangos: [{ hasta: 450, c: 70 }, { hasta: 650, c: 110 }, { hasta: 900, c: 155 }, { hasta: 1250, c: 185 }, { hasta: 1625, c: 235 }, { hasta: 2000, c: 300 }, { hasta: 2375, c: 360 }, { hasta: 2625, c: 410 }, { hasta: 2875, c: 450 }, { hasta: 3125, c: 495 }, { hasta: 3500, c: 545 }, { hasta: 3875, c: 605 }, { hasta: 5000, c: 800 }] },
+        { tipo: "Servicio Robo", meses: 24, rangos: [{ hasta: 450, c: 80 }, { hasta: 650, c: 125 }, { hasta: 900, c: 175 }, { hasta: 1250, c: 210 }, { hasta: 1625, c: 270 }, { hasta: 2000, c: 340 }, { hasta: 2375, c: 410 }, { hasta: 2625, c: 470 }, { hasta: 2875, c: 515 }, { hasta: 3125, c: 565 }, { hasta: 3500, c: 620 }, { hasta: 3875, c: 690 }, { hasta: 5000, c: 915 }] }
+    ],
+    "Watch": [
+        { tipo: "Servicio Robo", meses: 12, rangos: [{ hasta: 450, c: 1 }, { hasta: 650, c: 2 }, { hasta: 900, c: 3 }, { hasta: 1150, c: 4 }, { hasta: 1400, c: 5 }] },
+        { tipo: "Servicio Robo", meses: 18, rangos: [{ hasta: 450, c: 1 }, { hasta: 650, c: 2 }, { hasta: 900, c: 3 }, { hasta: 1150, c: 4 }, { hasta: 1400, c: 5 }] },
+        { tipo: "Servicio Robo", meses: 24, rangos: [{ hasta: 450, c: 1 }, { hasta: 650, c: 2 }, { hasta: 900, c: 3 }, { hasta: 1150, c: 4 }, { hasta: 1400, c: 5 }] },
+        { tipo: "Robo + Accidental", meses: 12, rangos: [{ hasta: 450, c: 1 }, { hasta: 650, c: 2 }, { hasta: 900, c: 3 }, { hasta: 1150, c: 4 }, { hasta: 1400, c: 5 }] },
+        { tipo: "Robo + Accidental", meses: 18, rangos: [{ hasta: 450, c: 1 }, { hasta: 650, c: 2 }, { hasta: 900, c: 3 }, { hasta: 1150, c: 4 }, { hasta: 1400, c: 5 }] },
+        { tipo: "Robo + Accidental", meses: 24, rangos: [{ hasta: 450, c: 1 }, { hasta: 650, c: 2 }, { hasta: 900, c: 3 }, { hasta: 1150, c: 4 }, { hasta: 1400, c: 5 }] }
+    ]
+};
+
+const accesoriosDB = {
+    iPhone: [{ nombre: "Case Apple", precio: 69, esProteccion: true }, { nombre: "Protector de Vidrio", precio: 42, esProteccion: true }, { nombre: "Cargador Apple 40W", precio: 49 }],
+    MacBook: [{ nombre: "Funda", precio: 39, esProteccion: true }, { nombre: "HardCase", precio: 59, esProteccion: true }, { nombre: "Multiport Hub USB-C", precio: 74 }],
+    iPad: [{ nombre: "Smart Folio Case", precio: 59, esProteccion: true }, { nombre: "Vidrio Temperado", precio: 39, esProteccion: true }],
+    Watch: [{ nombre: "Protector de Pantalla", precio: 29, esProteccion: true }, { nombre: "Cargador Rápido Watch", precio: 32 }]
+};
+const opcionesAirPods = [{ nombre: "AirPods 4", precio: 179 }, { nombre: "AirPods Pro 3", precio: 329 }];
+
+// ACTUALIZAR LOS DROPDOWNS DINÁMICAMENTE SEGÚN LA CATEGORÍA Y PLAZO SELECCIONADO
+function actualizarOpcionesAgregados() {
+    let cat = document.getElementById("filtro-categoria").value;
+    let meses = parseInt(document.getElementById("meses").value) || 24;
+    
+    let garexSelect = document.getElementById("garex-opcion");
+    let seguroSelect = document.getElementById("seguro-opcion");
+
+    // Reiniciar
+    garexSelect.innerHTML = '<option value="ninguno">Sin Garex</option>';
+    seguroSelect.innerHTML = '<option value="ninguno">Sin Seguro</option>';
+
+    if(cat === "todos") return;
+
+    // Poblar Garex
+    if(cat === "iPhone") {
+        garexSelect.innerHTML += '<option value="12">Garex +12 Meses</option>';
+        garexSelect.innerHTML += '<option value="24">Garex +24 Meses</option>';
+    } else {
+        garexSelect.innerHTML += '<option value="36">Garex +36 Meses</option>';
+    }
+
+    // Poblar Seguros basándose en la validez del plazo ingresado (12, 18, 24)
+    let plazoSeguro = [12, 18, 24].includes(meses) ? meses : 12; // default a 12 si ingresan un número loco
+    
+    if(cat === "iPhone") {
+        seguroSelect.innerHTML += `<option value="Robo y Hurto-${plazoSeguro}">Robo y Hurto (${plazoSeguro}m)</option>`;
+        seguroSelect.innerHTML += `<option value="Robo + Accidental-${plazoSeguro}">Robo + Accidental (${plazoSeguro}m)</option>`;
+    } else if(cat === "MacBook") {
+        seguroSelect.innerHTML += `<option value="Accidental-${plazoSeguro}">Solo Daño Accidental (${plazoSeguro}m)</option>`;
+        seguroSelect.innerHTML += `<option value="Robo + Accidental-${plazoSeguro}">Robo + Accidental (${plazoSeguro}m)</option>`;
+    } else if(cat === "iPad") {
+        seguroSelect.innerHTML += `<option value="Robo y Hurto-${plazoSeguro}">Robo y Hurto (${plazoSeguro}m)</option>`;
+        seguroSelect.innerHTML += `<option value="Servicio Robo-${plazoSeguro}">Servicio Robo Completo (${plazoSeguro}m)</option>`;
+    } else if(cat === "Watch") {
+        seguroSelect.innerHTML += `<option value="Servicio Robo-${plazoSeguro}">Servicio Robo (${plazoSeguro}m)</option>`;
+        seguroSelect.innerHTML += `<option value="Robo + Accidental-${plazoSeguro}">Robo + Accidental (${plazoSeguro}m)</option>`;
+    }
+}
+
+// BUSCADOR DE COSTO GAREX
+function obtenerCostoGarex(cat, precio, opcion) {
+    if(opcion === "ninguno") return 0;
+    let llave = (cat === "iPhone") ? "iPhone" : "Otros";
+    let configuracion = dbGarex[llave].find(g => g.mesesAdic == opcion);
+    if(!configuracion) return 0;
+    
+    let rango = configuracion.rangos.find(r => precio <= r.hasta);
+    return rango ? rango.costo : configuracion.rangos[configuracion.rangos.length - 1].costo;
+}
+
+// BUSCADOR DE COSTO SEGUROS
+function obtenerCostoSeguro(cat, precio, opcion) {
+    if(opcion === "ninguno" || !dbSeguros[cat]) return 0;
+    let [tipo, meses] = opcion.split("-");
+    meses = parseInt(meses);
+
+    let configuracion = dbSeguros[cat].find(s => s.tipo === tipo && s.meses === meses);
+    if(!configuracion) return 0;
+
+    let rango = configuracion.rangos.find(r => precio <= r.hasta);
+    return rango ? rango.c : configuracion.rangos[configuracion.rangos.length - 1].c;
+}
 
 function recomendar() {
     let filtroCategoria = document.getElementById("filtro-categoria").value;
     let cuota = parseFloat(document.getElementById("cuota").value);
     let meses = parseInt(document.getElementById("meses").value);
-    let soloDispositivo = document.getElementById("solo-dispositivo").checked; // Captura si el usuario activó la casilla
+    let soloDispositivo = document.getElementById("solo-dispositivo").checked;
+    
+    let garexSel = document.getElementById("garex-opcion").value;
+    let seguroSel = document.getElementById("seguro-opcion").value;
     
     if (!cuota || !meses) return;
 
@@ -399,36 +495,36 @@ function recomendar() {
     let opcionesEncontradas = [];
 
     productos.forEach(prod => {
-        if (filtroCategoria !== "todos" && prod.categoria !== filtroCategoria) {
-            return;
-        }
+        if (filtroCategoria !== "todos" && prod.categoria !== filtroCategoria) return;
 
-        // CALCULAR PRECIO CON DESCUENTO APLICADO SI EXISTE
         let descuento = descuentosActivos[prod.nombre] || 0;
         let precioFinalEquipo = prod.precio - descuento;
 
-        // Si el precio del equipo entra en el presupuesto (+ un margen de tolerancia de $15)
-        if (precioFinalEquipo <= capacidadTotal + 15) {
+        // Calcular agregados comerciales basados en el precio base del dispositivo
+        let costoGarex = obtenerCostoGarex(prod.categoria, precioFinalEquipo, garexSel);
+        let costoSeguro = obtenerCostoSeguro(prod.categoria, precioFinalEquipo, seguroSel);
+        let subtotalConAgregados = precioFinalEquipo + costoGarex + costoSeguro;
+
+        // Validar si entra en presupuesto (Margen cortesía de $15)
+        if (subtotalConAgregados <= capacidadTotal + 15) {
             
-            // SI EL CLIENTE ELIGIÓ "SOLO DISPOSITIVO" O si el equipo consume casi todo el presupuesto
-            if (soloDispositivo || precioFinalEquipo >= capacidadTotal * 0.85) {
+            if (soloDispositivo || subtotalConAgregados >= capacidadTotal * 0.85) {
                 opcionesEncontradas.push({
                     tipo: "solo",
                     producto: prod,
                     precioRegular: prod.precio,
                     precioEquipo: precioFinalEquipo,
                     descuento: descuento,
-                    total: precioFinalEquipo,
-                    cuotaReal: precioFinalEquipo / meses,
+                    costoGarex: costoGarex,
+                    costoSeguro: costoSeguro,
+                    total: subtotalConAgregados,
+                    cuotaReal: subtotalConAgregados / meses,
                     detalles: []
                 });
-            } 
-            
-            // Si el cliente quiere combos y el equipo deja margen de presupuesto
-            else {
-                let dineroParaAccesorios = capacidadTotal - precioFinalEquipo;
+            } else {
+                let dineroParaAccesorios = capacidadTotal - subtotalConAgregados;
                 let comboAccesorios = armarComboAccesorios(prod.categoria, dineroParaAccesorios);
-                let totalCombo = precioFinalEquipo + comboAccesorios.totalAccesorios;
+                let totalCombo = subtotalConAgregados + comboAccesorios.totalAccesorios;
 
                 opcionesEncontradas.push({
                     tipo: "combo",
@@ -436,6 +532,8 @@ function recomendar() {
                     precioRegular: prod.precio,
                     precioEquipo: precioFinalEquipo,
                     descuento: descuento,
+                    costoGarex: costoGarex,
+                    costoSeguro: costoSeguro,
                     total: totalCombo,
                     cuotaReal: totalCombo / meses,
                     detalles: comboAccesorios.lista
@@ -447,7 +545,7 @@ function recomendar() {
     opcionesEncontradas.sort((a, b) => b.total - a.total);
 
     if (opcionesEncontradas.length === 0) {
-        contenedor.innerHTML = "<p style='color:#ff3b30; text-align:center;'>No se encontraron opciones que coincidan en esta categoría con ese presupuesto.</p>";
+        contenedor.innerHTML = "<p style='color:#ff3b30; text-align:center;'>No se encontraron opciones que coincidan con los agregados y presupuesto indicados.</p>";
         return;
     }
 
@@ -458,7 +556,7 @@ function recomendar() {
         let htmlTarjeta = `
             <div class="tarjeta-recomendacion">
                 <span class="tag-tipo ${opc.tipo === 'solo' ? 'tag-solo' : 'tag-combo'}">
-                    ${opc.tipo === 'solo' ? 'SOLO EQUIPO' : 'EQUIPO EN COMBO'}
+                    ${opc.tipo === 'solo' ? 'EQUIPO + SERVICIOS' : 'COMBO COMPLETO'}
                 </span>
                 ${textoDescuentoTag}
                 <h3>${opc.producto.nombre}</h3>
@@ -466,19 +564,26 @@ function recomendar() {
                 <div class="precio-principal">
                     ${formatoUSD.format(opc.cuotaReal)} <span>/ mes</span>
                 </div>
-                <div style="font-size:13px; color:#6e6e73;">Valor total de la venta: ${formatoUSD.format(opc.total)}</div>
+                <div style="font-size:13px; color:#6e6e73; margin-bottom: 8px;">Monto total financiado: ${formatoUSD.format(opc.total)}</div>
+                
+                <div class="desglose-combo" style="border-top: 1px solid #e8e8ed; padding-top: 8px;">
+                    <strong>Desglose del Contrato:</strong>
+                    <div class="item-linea" style="color:#6e6e73;"><span>• Equipo Principal</span> <span>${formatoUSD.format(opc.precioEquipo)}</span></div>
         `;
 
+        if(opc.costoGarex > 0) {
+            htmlTarjeta += `<div class="item-linea" style="color:#0071e3;"><span>• Garantía Garex (+${garexSel}m)</span> <span>${formatoUSD.format(opc.costoGarex)}</span></div>`;
+        }
+        if(opc.costoSeguro > 0) {
+            htmlTarjeta += `<div class="item-linea" style="color:#1b5e20;"><span>• Seguro iShop (${seguroSel.split("-")[0]})</span> <span>${formatoUSD.format(opc.costoSeguro)}</span></div>`;
+        }
         if (opc.tipo === 'combo' && opc.detalles.length > 0) {
-            htmlTarjeta += `<div class="desglose-combo"><strong>Incluye accesorios:</strong>`;
-            htmlTarjeta += `<div class="item-linea" style="color:#86868b;"><span>• ${opc.producto.nombre} (Equipo)</span> <span>${formatoUSD.format(opc.precioEquipo)}</span></div>`;
             opc.detalles.forEach(acc => {
-                htmlTarjeta += `<div class="item-linea"><span>• ${acc.nombre}</span> <span>${formatoUSD.format(acc.precio)}</span></div>`;
+                htmlTarjeta += `<div class="item-linea"><span>• Acceso. ${acc.nombre}</span> <span>${formatoUSD.format(acc.precio)}</span></div>`;
             });
-            htmlTarjeta += `</div>`;
         }
 
-        htmlTarjeta += `</div>`;
+        htmlTarjeta += `</div></div>`;
         contenedor.innerHTML += htmlTarjeta;
     });
 }
@@ -498,28 +603,18 @@ function armarComboAccesorios(categoria, presupuestoMax) {
 
     let faltante = presupuestoMax - totalAccesorios;
     if (faltante >= 179) {
-        let airPodElegido = null;
-        opcionesAirPods.forEach(pod => {
-            if (pod.precio <= faltante) {
-                airPodElegido = pod;
-            }
-        });
+        let airPodElegido = opcionesAirPods.find(pod => pod.precio <= faltante);
         if (airPodElegido) {
             listaFinal.push(airPodElegido);
             totalAccesorios += airPodElegido.precio;
         }
     }
 
-    let otros = listaBase.filter(i => !i.esProteccion);
-    otros.forEach(item => {
-        if (totalAccesorios + item.precio <= presupuestoMax) {
-            listaFinal.push(item);
-            totalAccesorios += item.precio;
-        }
-    });
-
     return { lista: listaFinal, totalAccesorios: totalAccesorios };
 }
+
+// Inicializar dropdowns al cargar la app
+actualizarOpcionesAgregados();
 </script>
 
 </body>
