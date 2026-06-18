@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuota Cliente</title>
+
+<style>
+/* ESTILO BLANCO MINIMALISTA DE APPLE */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #f5f5f7;
+    color: #1d1d1f;
+    text-align: center;
+    padding: 20px;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    -webkit-font-smoothing: antialiased;
+}
+
+.container {
+    background: #ffffff;
+    padding: 35px 28px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 480px;
+    box-sizing: border-box;
+    box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.04);
+    border: 1px solid #d2d2d7;
+}
+
+h2 {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.022em;
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: #1d1d1f;
+}
+
+p.subtitle {
+    color: #86868b;
+    font-size: 14px;
+    margin-bottom: 24px;
+    margin-top: 0;
+}
+
+.form-group {
+    text-align: left;
+    margin-bottom: 18px;
+}
+
+.form-inline {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.form-inline .form-group {
+    margin-bottom: 0;
+    flex: 1;
+}
+
+label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: #86868b;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding-left: 4px;
+}
+
+select, input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #d2d2d7;
+    background: #ffffff;
+    color: #1d1d1f;
+    font-size: 16px;
+    font-weight: 400;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+select:focus, input:focus {
+    border-color: #0071e3;
+}
+
+button {
+    background: #0071e3;
+    color: #ffffff;
+    border: none;
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s ease;
+}
+
+button:hover {
+    background: #0077ed;
+}
+
+/* CONTENEDOR DE OPCIONES RECOMENDADAS */
+#capacidad-total {
+    margin-top: 20px;
+    font-size: 15px;
+    color: #6e6e73;
+}
+
+#resultados-container {
+    margin-top: 20px;
+    text-align: left;
+    display: none;
+}
+
+.tarjeta-recomendacion {
+    background: #f5f5f7;
+    border: 1px solid #e8e8ed;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.tarjeta-recomendacion h3 {
+    margin: 0 0 4px 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.tag-tipo {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+}
+
+.tag-solo { background: #e3f2fd; color: #0d47a1; }
+.tag-combo { background: #e8f5e9; color: #1b5e20; }
+
+.tag-descuento {
+    background: #e8f5e9;
+    color: #24b23e;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-left: 6px;
+}
+
+.precio-principal {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1d1d1f;
+    margin-bottom: 12px;
+}
+
+.precio-principal span {
+    font-size: 14px;
+    color: #86868b;
+    font-weight: 400;
+}
+
+.precio-antes {
+    text-decoration: line-through;
+    color: #86868b;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.desglose-combo {
+    border-top: 1px solid #d2d2d7;
+    padding-top: 10px;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #515154;
+}
+
+.item-linea {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+/* RESPONSIVE MÓVIL */
+@media (max-width: 480px) {
+    body { padding: 12px; background: #ffffff; }
+    .container { padding: 16px 8px; box-shadow: none; border: none; }
+    h2 { font-size: 24px; }
+    .form-inline { flex-direction: column; gap: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Cuota máxima a pagar</h2>
+    <p class="subtitle">Encontramos el ecosistema Apple ideal para tu presupuesto.</p>
+
+    <div class="form-group">
+        <label>¿Qué estás buscando?</label>
+        <select id="filtro-categoria">
+            <option value="todos">Cualquier dispositivo</option>
+            <option value="iPhone">iPhone</option>
+            <option value="MacBook">Mac</option>
+            <option value="iPad">iPad</option>
+            <option value="Watch">Apple Watch</option>
+        </select>
+    </div>
+
+    <div class="form-inline">
+        <div class="form-group">
+            <label>Cuota mensual ($)</label>
+            <input type="number" id="cuota" placeholder="Ej. 70" min="1">
+        </div>
+        <div class="form-group">
+            <label>Plazo (Meses)</label>
+            <input type="number" id="meses" value="24" min="1">
+        </div>
+    </div>
+
+    <button onclick="recomendar()">Buscar Opciones</button>
+
+    <div id="capacidad-total"></div>
+    <div id="resultados-container"></div>
+
+</div>
+
+<script>
+// ==========================================
+// APARTADO DE DESCUENTOS ACTIVOS (Modifica aquí en temporada de promo)
+// Pon el monto exacto en dólares que deseas REBAJAR de cada modelo.
+// ==========================================
+const descuentosActivos = {
+    //  "iPhone 15 - 128GB": 50,         // Rebaja $50 de su precio regular
+
+};
+
+// BASE DE DATOS DE PRODUCTOS (Precios Regulares)
+const productos = [
+    { categoria: "iPhone", nombre: "iPhone 13 - 128GB", precio: 589 },
+    { categoria: "iPhone", nombre: "iPhone 15 - 128GB", precio: 899 },
+    { categoria: "iPhone", nombre: "iPhone 16 - 128GB", precio: 1049 },
+    { categoria: "iPhone", nombre: "iPhone 17e - 256GB", precio: 849 },
+    { categoria: "iPhone", nombre: "iPhone 17 - 256GB", precio: 1209 },
+    { categoria: "iPhone", nombre: "iPhone Air - 256GB", precio: 1369 },
+    { categoria: "iPhone", nombre: "iPhone 17 Pro - 256GB", precio: 1659 },
+    { categoria: "iPhone", nombre: "iPhone 17 Pro - 512GB", precio: 1969 },
+    { categoria: "iPhone", nombre: "iPhone 17 Pro Max - 256GB", precio: 1809 },
+    { categoria: "iPhone", nombre: "iPhone 17 Pro Max - 512GB", precio: 2099 },
+    { categoria: "MacBook", nombre: "MacBook Neo - 256GB", precio: 779 },
+    { categoria: "MacBook", nombre: "MacBook Neo - 512GB", precio: 899 },
+    { categoria: "MacBook", nombre: "MacBook Air 13 M5 - 512GB", precio: 1469 },
+    { categoria: "MacBook", nombre: "MacBook Air 13 M5 - 1TB", precio: 1769 },
+    { categoria: "MacBook", nombre: "MacBook Air 15 M5 - 512GB", precio: 1769 },
+    { categoria: "MacBook", nombre: "MacBook Air 15 M5 - 1TB", precio: 2039 },
+    { categoria: "MacBook", nombre: "MacBook Pro 14 M5 - 512GB", precio: 2099 },
+    { categoria: "MacBook", nombre: "MacBook Pro 14 M5 - 1TB", precio: 2559 },
+    { categoria: "MacBook", nombre: "MacBook Pro 16 M5 - 1TB", precio: 3479 },
+    { categoria: "iPad", nombre: "iPad 11 A16 - 128GB", precio: 479 },
+    { categoria: "iPad", nombre: "iPad 11 A16 - 256GB", precio: 609 },
+    { categoria: "iPad", nombre: "iPad Mini A17 Pro - 128GB", precio: 689 },
+    { categoria: "iPad", nombre: "iPad Air 11 M4 - 128GB", precio: 799 },
+    { categoria: "iPad", nombre: "iPad Air 11 M4 - 256GB", precio: 939 },
+    { categoria: "iPad", nombre: "iPad Air 13 M4 - 128GB", precio: 1079 },
+    { categoria: "iPad", nombre: "iPad Air 13 M4 - 256GB", precio: 1209 },
+    { categoria: "iPad", nombre: "iPad Pro 11 M5 - 256GB", precio: 1349 },
+    { categoria: "iPad", nombre: "iPad Pro 11 M5 - 512GB", precio: 1609 },
+    { categoria: "iPad", nombre: "iPad Pro 13 M5 - 256GB", precio: 1749 },
+    { categoria: "iPad", nombre: "iPad Pro 13 M5 - 512GB", precio: 2019 },
+    { categoria: "Watch", nombre: "Apple Watch SE3 - 40mm", precio: 359 },
+    { categoria: "Watch", nombre: "Apple Watch SE3 - 44mm", precio: 399 },
+    { categoria: "Watch", nombre: "Apple Watch Series 11 - 42mm", precio: 579 },
+    { categoria: "Watch", nombre: "Apple Watch Series 11 - 46mm", precio: 619 }
+];
+
+// BASE DE DATOS DE ACCESORIOS
+const accesoriosDB = {
+    iPhone: [
+        { nombre: "Case Apple", precio: 69, esProteccion: true },
+        { nombre: "Protector de Vidrio", precio: 42, esProteccion: true },
+        { nombre: "Cargador Apple 40W", precio: 49 },
+        { nombre: "Cargador MagSafe", precio: 54 },
+        { nombre: "Batería MagSafe", precio: 74 }
+    ],
+    MacBook: [
+        { nombre: "Funda", precio: 39, esProteccion: true },
+        { nombre: "Carcasa HardCase", precio: 59, esProteccion: true },
+        { nombre: "Multiport Hub USB-C", precio: 74 },
+        { nombre: "Office 365", precio: 94 },
+        { nombre: "Teclado numérico", precio: 49 },
+        { nombre: "Magic Mouse", precio: 119 }
+    ],
+    iPad: [
+        { nombre: "Smart Folio Case", precio: 59, esProteccion: true },
+        { nombre: "Vidrio Temperado", precio: 39, esProteccion: true },
+        { nombre: "Apple Pencil Pro", precio: 192 }
+    ],
+    Watch: [
+        { nombre: "Protector de Pantalla", precio: 29, esProteccion: true },
+        { nombre: "Cargador Rápido Watch", precio: 32 },
+        { nombre: "Correa Adicional", precio: 64 }
+    ]
+};
+
+const opcionesAirPods = [
+    { nombre: "AirPods 4", precio: 179 },
+    { nombre: "AirPods 4 con ANC", precio: 229 },
+    { nombre: "AirPods Max", precio: 689 },
+    { nombre: "AirPods Pro 3", precio: 329 }
+];
+
+function recomendar() {
+    let filtroCategoria = document.getElementById("filtro-categoria").value;
+    let cuota = parseFloat(document.getElementById("cuota").value);
+    let meses = parseInt(document.getElementById("meses").value);
+    
+    if (!cuota || !meses) return;
+
+    let capacidadTotal = cuota * meses;
+    let formatoUSD = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+    document.getElementById("capacidad-total").innerHTML = 
+        `Capacidad total de compra: <b>${formatoUSD.format(capacidadTotal)}</b> a ${meses} meses.`;
+
+    let contenedor = document.getElementById("resultados-container");
+    contenedor.innerHTML = "";
+    contenedor.style.display = "block";
+
+    let opcionesEncontradas = [];
+
+    productos.forEach(prod => {
+        if (filtroCategoria !== "todos" && prod.categoria !== filtroCategoria) {
+            return;
+        }
+
+        // CALCULAR PRECIO CON DESCUENTO APLICADO SI EXISTE
+        let descuento = descuentosActivos[prod.nombre] || 0;
+        let precioFinalEquipo = prod.precio - descuento;
+
+        if (precioFinalEquipo <= capacidadTotal + 15) {
+            
+            // Caso 1: El equipo solo ya consume casi todo el presupuesto
+            if (precioFinalEquipo >= capacidadTotal * 0.85) {
+                opcionesEncontradas.push({
+                    tipo: "solo",
+                    producto: prod,
+                    precioRegular: prod.precio,
+                    precioEquipo: precioFinalEquipo,
+                    descuento: descuento,
+                    total: precioFinalEquipo,
+                    cuotaReal: precioFinalEquipo / meses,
+                    detalles: []
+                });
+            } 
+            
+            // Caso 2: El equipo es más barato, se añade combo con el dinero sobrante
+            else {
+                let dineroParaAccesorios = capacidadTotal - precioFinalEquipo;
+                let comboAccesorios = armarComboAccesorios(prod.categoria, dineroParaAccesorios);
+                let totalCombo = precioFinalEquipo + comboAccesorios.totalAccesorios;
+
+                opcionesEncontradas.push({
+                    tipo: "combo",
+                    producto: prod,
+                    precioRegular: prod.precio,
+                    precioEquipo: precioFinalEquipo,
+                    descuento: descuento,
+                    total: totalCombo,
+                    cuotaReal: totalCombo / meses,
+                    detalles: comboAccesorios.lista
+                });
+            }
+        }
+    });
+
+    opcionesEncontradas.sort((a, b) => b.total - a.total);
+
+    if (opcionesEncontradas.length === 0) {
+        contenedor.innerHTML = "<p style='color:#ff3b30; text-align:center;'>No se encontraron opciones que coincidan en esta categoría con ese presupuesto.</p>";
+        return;
+    }
+
+    opcionesEncontradas.forEach(opc => {
+        let textoDescuentoTag = opc.descuento > 0 ? `<span class="tag-descuento">-$${opc.descuento} PROMO</span>` : '';
+        let htmlAntesPrecio = opc.descuento > 0 ? `<div class="precio-antes">Regular: ${formatoUSD.format(opc.precioRegular)}</div>` : '';
+
+        let htmlTarjeta = `
+            <div class="tarjeta-recomendacion">
+                <span class="tag-tipo ${opc.tipo === 'solo' ? 'tag-solo' : 'tag-combo'}">
+                    ${opc.tipo === 'solo' ? 'SOLO EQUIPO' : 'EQUIPO EN COMBO'}
+                </span>
+                ${textoDescuentoTag}
+                <h3>${opc.producto.nombre}</h3>
+                ${htmlAntesPrecio}
+                <div class="precio-principal">
+                    ${formatoUSD.format(opc.cuotaReal)} <span>/ mes</span>
+                </div>
+                <div style="font-size:13px; color:#6e6e73;">Valor total de la venta: ${formatoUSD.format(opc.total)}</div>
+        `;
+
+        if (opc.tipo === 'combo' && opc.detalles.length > 0) {
+            htmlTarjeta += `<div class="desglose-combo"><strong>Incluye accesorios:</strong>`;
+            htmlTarjeta += `<div class="item-linea" style="color:#86868b;"><span>• ${opc.producto.nombre} (Equipo)</span> <span>${formatoUSD.format(opc.precioEquipo)}</span></div>`;
+            opc.detalles.forEach(acc => {
+                htmlTarjeta += `<div class="item-linea"><span>• ${acc.nombre}</span> <span>${formatoUSD.format(acc.precio)}</span></div>`;
+            });
+            htmlTarjeta += `</div>`;
+        }
+
+        htmlTarjeta += `</div>`;
+        contenedor.innerHTML += htmlTarjeta;
+    });
+}
+
+function armarComboAccesorios(categoria, presupuestoMax) {
+    let listaBase = accesoriosDB[categoria] || [];
+    let listaFinal = [];
+    let totalAccesorios = 0;
+
+    let protecciones = listaBase.filter(i => i.esProteccion);
+    protecciones.forEach(item => {
+        if (totalAccesorios + item.precio <= presupuestoMax) {
+            listaFinal.push(item);
+            totalAccesorios += item.precio;
+        }
+    });
+
+    let faltante = presupuestoMax - totalAccesorios;
+    if (faltante >= 179) {
+        let airPodElegido = null;
+        opcionesAirPods.forEach(pod => {
+            if (pod.precio <= faltante) {
+                airPodElegido = pod;
+            }
+        });
+        if (airPodElegido) {
+            listaFinal.push(airPodElegido);
+            totalAccesorios += airPodElegido.precio;
+        }
+    }
+
+    let otros = listaBase.filter(i => !i.esProteccion);
+    otros.forEach(item => {
+        if (totalAccesorios + item.precio <= presupuestoMax) {
+            listaFinal.push(item);
+            totalAccesorios += item.precio;
+        }
+    });
+
+    return { lista: listaFinal, totalAccesorios: totalAccesorios };
+}
+</script>
+
+</body>
+</html>
