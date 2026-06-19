@@ -340,7 +340,7 @@ const productos = [
     { categoria: "iPad", nombre: "iPad Mini A17 Pro - 128GB", precio: 689 },
     { categoria: "iPad", nombre: "iPad Air 11 M4 - 128GB", precio: 799 },
     { categoria: "iPad", nombre: "iPad Air 11 M4 - 256GB", precio: 939 },
-    { categoria: "iPad", nombre: "iPad Air 13 M4 - 128GB", precio: 1079 },
+    { categoria: "iPad", font: "iPad", nombre: "iPad Air 13 M4 - 128GB", precio: 1079 },
     { categoria: "iPad", nombre: "iPad Air 13 M4 - 256GB", precio: 1209 },
     { categoria: "iPad", nombre: "iPad Pro 11 M5 - 256GB", precio: 1349 },
     { categoria: "iPad", nombre: "iPad Pro 11 M5 - 512GB", precio: 1609 },
@@ -377,7 +377,7 @@ const dbSeguros = {
         { tipo: "Accidental", meses: 12, rangos: [{ hasta: 800, c: 45 }, { hasta: 1000, c: 60 }, { hasta: 1500, c: 75 }, { hasta: 2000, c: 130 }, { hasta: 2500, c: 155 }, { hasta: 4250, c: 195 }, { hasta: 5000, c: 280 }, { hasta: 6250, c: 340 }] },
         { tipo: "Accidental", meses: 18, rangos: [{ hasta: 800, c: 65 }, { hasta: 1000, c: 85 }, { hasta: 1500, c: 110 }, { hasta: 2000, c: 180 }, { hasta: 2500, c: 215 }, { hasta: 4250, c: 275 }, { hasta: 5000, c: 390 }, { hasta: 6250, c: 475 }] },
         { tipo: "Accidental", meses: 24, rangos: [{ hasta: 800, c: 70 }, { hasta: 1000, c: 100 }, { hasta: 1500, c: 125 }, { hasta: 2000, c: 210 }, { hasta: 2450, c: 245 }, { hasta: 4250, c: 310 }, { hasta: 5000, c: 445 }, { hasta: 6250, c: 540 }] },
-        { tipo: "Robo + Accidental", meses: 12, rangos: [{ hasta: 800, c: 70 }, { hasta: 1000, c: 95 }, { hasta: 1500, c: 130 }, { hasta: 2000, c: 215 }, { hasta: 2500, c: 280 }, { hasta: 4250, c: 355 }, { hasta: 5000, c: 510 }, { hasta: 6250, c: 615 }] },
+        { tipo: "Robo + Accidental", meses: 12, rangos: [{ hasta: 800, c: 70 }, { hasta: 1000, c: 95 }, { hasta: 1500, c: 130 }, { hasta: 2000, c: 215 }, { hasta: 280, c: 280 }, { hasta: 4250, c: 355 }, { hasta: 5000, c: 510 }, { hasta: 6250, c: 615 }] },
         { tipo: "Robo + Accidental", meses: 18, rangos: [{ hasta: 800, c: 95 }, { hasta: 1000, c: 130 }, { hasta: 1500, c: 180 }, { hasta: 2000, c: 305 }, { hasta: 2500, c: 390 }, { hasta: 4250, c: 500 }, { hasta: 5000, c: 710 }, { hasta: 6250, c: 865 }] },
         { tipo: "Robo + Accidental", meses: 24, rangos: [{ hasta: 800, c: 110 }, { hasta: 1000, c: 150 }, { hasta: 1500, c: 210 }, { hasta: 2000, c: 345 }, { hasta: 2500, c: 450 }, { hasta: 4250, c: 570 }, { hasta: 5000, c: 810 }, { hasta: 6250, c: 985 }] }
     ],
@@ -386,8 +386,8 @@ const dbSeguros = {
         { tipo: "Robo y Hurto", meses: 18, rangos: [{ hasta: 450, c: 35 }, { hasta: 650, c: 55 }, { hasta: 900, c: 75 }, { hasta: 1250, c: 90 }, { hasta: 1625, c: 116 }, { hasta: 2000, c: 145 }, { hasta: 2375, c: 175 }, { hasta: 2625, c: 200 }, { hasta: 2875, c: 220 }, { hasta: 3125, c: 240 }, { hasta: 3500, c: 265 }, { hasta: 3875, c: 295 }, { hasta: 5000, c: 400 }] },
         { tipo: "Robo y Hurto", meses: 24, rangos: [{ hasta: 450, c: 40 }, { hasta: 650, c: 60 }, { hasta: 900, c: 85 }, { hasta: 1250, c: 100 }, { hasta: 1625, c: 135 }, { hasta: 2000, c: 170 }, { hasta: 2375, c: 200 }, { hasta: 2625, c: 230 }, { hasta: 2875, c: 255 }, { hasta: 3125, c: 275 }, { hasta: 3500, c: 305 }, { hasta: 3875, c: 340 }, { hasta: 5000, c: 455 }] },
         { tipo: "Servicio Robo", meses: 12, rangos: [{ hasta: 450, c: 50 }, { hasta: 650, c: 80 }, { hasta: 900, c: 110 }, { hasta: 1250, c: 130 }, { hasta: 1625, c: 170 }, { hasta: 2000, c: 210 }, { hasta: 2375, c: 260 }, { hasta: 2625, c: 295 }, { hasta: 2875, c: 325 }, { hasta: 3125, c: 350 }, { hasta: 3500, c: 390 }, { hasta: 3875, c: 435 }, { hasta: 5000, c: 570 }] },
-        { tipo: "Servicio Robo", meses: 18, rangos: [{ hasta: 450, c: 70 }, { hasta: 650, c: 110 }, { hasta: 900, c: 155 }, { hasta: 1250, c: 185 }, { hasta: 1625, c: 235 }, { hasta: 2000, c: 300 }, { hasta: 2375, c: 360 }, { hasta: 2625, c: 410 }, { hasta: 2875, c: 450 }, { hasta: 3125, c: 495 }, { hasta: 3500, c: 545 }, { hasta: 3875, c: 605 }, { hasta: 5000, c: 800 }] },
-        { tipo: "Servicio Robo", meses: 24, rangos: [{ hasta: 450, c: 80 }, { hasta: 650, c: 125 }, { hasta: 900, c: 175 }, { hasta: 1250, c: 210 }, { hasta: 1625, c: 270 }, { hasta: 2000, c: 340 }, { hasta: 2375, c: 410 }, { hasta: 2625, c: 470 }, { hasta: 2875, c: 515 }, { hasta: 3125, c: 565 }, { hasta: 3500, c: 620 }, { hasta: 3875, c: 690 }, { hasta: 5000, c: 915 }] }
+        { tipo: "Servicio Robo", meses: 18, rangos: [{ hasta: 450, c: 70 }, { hasta: 650, c: 110 }, { hasta: 900, c: 155 }, { hasta: 1250, c: 185 }, { hasta: 235, c: 235 }, { hasta: 2000, c: 300 }, { hasta: 2375, c: 360 }, { hasta: 2625, c: 410 }, { hasta: 2875, c: 450 }, { hasta: 3125, c: 495 }, { hasta: 3500, c: 545 }, { hasta: 3875, c: 605 }, { hasta: 5000, c: 800 }] },
+        { tipo: "Servicio Robo", meses: 24, rangos: [{ hasta: 450, c: 80 }, { hasta: 650, c: 125 }, { hasta: 900, c: 175 }, { hasta: 1250, c: 210 }, { hasta: 270, c: 270 }, { hasta: 2000, c: 340 }, { hasta: 2375, c: 410 }, { hasta: 2625, c: 470 }, { hasta: 2875, c: 515 }, { hasta: 3125, c: 565 }, { hasta: 3500, c: 620 }, { hasta: 3875, c: 690 }, { hasta: 5000, c: 915 }] }
     ],
     "Watch": [
         { tipo: "Servicio Robo", meses: 12, rangos: [{ hasta: 450, c: 1 }, { hasta: 650, c: 2 }, { hasta: 900, c: 3 }, { hasta: 1150, c: 4 }, { hasta: 1400, c: 5 }] },
@@ -400,10 +400,10 @@ const dbSeguros = {
 };
 
 const accesoriosDB = {
-    iPhone: [{ nombre: "Case Apple", precio: 69, esProteccion: true }, { nombre: "Protector de Vidrio", precio: 42, esProteccion: true }, { nombre: "Cargador Apple 40W", precio: 49 }],
-    MacBook: [{ nombre: "Funda", precio: 39, esProteccion: true }, { nombre: "HardCase", precio: 59, esProteccion: true }, { nombre: "Multiport Hub USB-C", precio: 74 }],
-    iPad: [{ nombre: "Smart Folio Case", precio: 59, esProteccion: true }, { nombre: "Vidrio Temperado", precio: 39, esProteccion: true }],
-    Watch: [{ nombre: "Protector de Pantalla", precio: 29, esProteccion: true }, { nombre: "Cargador Rápido Watch", precio: 32 }]
+    iPhone: [{ nombre: "Case Apple", precio: 69, esProteccion: true }, { nombre: "Vidrio Temperado de Privacidad", precio: 42, esProteccion: true }, { nombre: "Protector de Cámaras", precio: 24, esProteccion: true }, { nombre: "Base de Carga Belkin 3-1", precio: 119, esProteccion: true }, { nombre: "iKlear", precio: 42, esProteccion: true }, { nombre: "Wallet Apple", precio: 84, esProteccion: true }, { nombre: "Cargador Apple 40W", precio: 49, esProteccion: true }],
+    MacBook: [{ nombre: "Funda", precio: 39, esProteccion: true }, { nombre: "HardCase", precio: 59, esProteccion: true }, { nombre: "Multiport Hub USB-C", precio: 74, esProteccion: true }, { nombre: "Teclado numérico", precio: 49, esProteccion: true }, { nombre: "iKlear", precio: 42, esProteccion: true },{ nombre: "Office 365", precio: 94, esProteccion: true }],
+    iPad: [{ nombre: "Case", precio: 59, esProteccion: true }, { nombre: "iKlear", precio: 42, esProteccion: true }, { nombre: "Vidrio Temperado", precio: 39, esProteccion: true }, { nombre: "Apple Pencil USB-C", precio: 132, esProteccion: true }],
+    Watch: [{ nombre: "Bumper", precio: 29, esProteccion: true }, { nombre: "iKlear", precio: 42, esProteccion: true }, { nombre: "Banda Apple", precio: 64, esProteccion: true }, { nombre: "Cargador Apple 20W", precio: 32, esProteccion: true }, { nombre: "Base de Carga Belkin 3-1", precio: 119, esProteccion: true }]
 };
 const opcionesAirPods = [{ nombre: "AirPods 4", precio: 179 }, { nombre: "AirPods Pro 3", precio: 329 }];
 
@@ -516,7 +516,7 @@ function recomendar() {
 
         if (subtotalConAgregados <= capacidadTotal + 15) {
             
-            if (soloDispositivo || subtotalConAgregados >= capacidadTotal * 0.85) {
+            if (soloDispositivo || subtotalConAgregados >= capacidadTotal * 0.95) {
                 opcionesEncontradas.push({
                     tipo: "solo",
                     producto: prod,
@@ -575,7 +575,7 @@ function recomendar() {
                 <div style="font-size:13px; color:#6e6e73; margin-bottom: 8px;">Monto total financiado: ${formatoUSD.format(opc.total)}</div>
                 
                 <div class="desglose-combo" style="border-top: 1px solid #e8e8ed; padding-top: 8px;">
-                    <strong>Desglose del Contrato:</strong>
+                    <strong>Desglose la cuota:</strong>
                     <div class="item-linea" style="color:#6e6e73;"><span>• Equipo Principal</span> <span>${formatoUSD.format(opc.precioEquipo)}</span></div>
         `;
 
@@ -601,21 +601,29 @@ function armarComboAccesorios(categoria, presupuestoMax) {
     let listaFinal = [];
     let totalAccesorios = 0;
 
-    let protecciones = listaBase.filter(i => i.esProteccion);
-    protecciones.forEach(item => {
+    // Agrega todos los accesorios que quepan en el presupuesto
+    listaBase.forEach(item => {
         if (totalAccesorios + item.precio <= presupuestoMax) {
             listaFinal.push(item);
             totalAccesorios += item.precio;
         }
     });
 
+    // Si sobra suficiente dinero, evalúa meter AirPods
     let faltante = presupuestoMax - totalAccesorios;
-    if (faltante >= 179) {
-        let airPodElegido = opcionesAirPods.find(pod => pod.precio <= faltante);
-        if (airPodElegido) {
-            listaFinal.push(airPodElegido);
-            totalAccesorios += airPodElegido.precio;
+    let airPodElegido = null;
+    
+    // Elige el AirPods de mayor valor que quepa en el restante
+    for (let i = opcionesAirPods.length - 1; i >= 0; i--) {
+        if (opcionesAirPods[i].precio <= faltante) {
+            airPodElegido = opcionesAirPods[i];
+            break;
         }
+    }
+
+    if (airPodElegido) {
+        listaFinal.push(airPodElegido);
+        totalAccesorios += airPodElegido.precio;
     }
 
     return { lista: listaFinal, totalAccesorios: totalAccesorios };
