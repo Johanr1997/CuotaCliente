@@ -243,6 +243,72 @@ button:hover {
     .form-inline { flex-direction: column; gap: 12px; }
 }
 
+/* ==========================================
+   IMPLEMENTACIÓN MODO OSCURO (SISTEMA)
+   ========================================== */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: #000000;
+        color: #f5f5f7;
+    }
+
+    .container {
+        background: #1c1c1e;
+        border-color: #2c2c2e;
+        box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    h2, .checkbox-group label, .tarjeta-recomendacion h3 {
+        color: #ffffff;
+    }
+
+    p.subtitle, #capacidad-total, .precio-principal span, .precio-antes, .desglose-combo {
+        color: #86868b;
+    }
+
+    select, input[type="number"] {
+        background: #2c2c2e;
+        border-color: #3a3a3c;
+        color: #ffffff;
+    }
+
+    select:focus, input[type="number"]:focus {
+        border-color: #0a84ff;
+    }
+
+    .tarjeta-recomendacion {
+        background: #2c2c2e;
+        border-color: #3a3a3c;
+    }
+
+    .precio-principal {
+        color: #ffffff;
+    }
+
+    .tag-solo { 
+        background: #0a2f5c; 
+        color: #409fff; 
+    }
+    
+    .tag-combo { 
+        background: #0f3d1b; 
+        color: #52d369; 
+    }
+
+    .logo-final {
+        filter: invert(1);
+        opacity: 0.4;
+    }
+    
+    .logo-final:hover {
+        opacity: 0.8;
+    }
+    
+    /* Pequeño ajuste responsive en modo oscuro */
+    @media (max-width: 480px) {
+        body { background: #1c1c1e; }
+    }
+}
 </style>
 </head>
 <body>
@@ -350,7 +416,7 @@ const productos = [
     { categoria: "Watch", nombre: "Apple Watch SE3 - 40mm", precio: 359 },
     { categoria: "Watch", nombre: "Apple Watch SE3 - 44mm", precio: 399 },
     { categoria: "Watch", nombre: "Apple Watch Series 11 - 42mm", precio: 579 },
-    { categoria: "Watch", nombre: "Apple Watch Series 11 - 46mm", precio: 619 }
+    { categoria: "Watch", font: "Watch", nombre: "Apple Watch Series 11 - 46mm", precio: 619 }
 ];
 
 // MATRIZ DE CONFIGURACIÓN GAREX
@@ -385,7 +451,7 @@ const dbSeguros = {
     "iPad": [
         { tipo: "Robo y Hurto", meses: 12, rangos: [{ hasta: 450, c: 25 }, { hasta: 650, c: 40 }, { hasta: 900, c: 55 }, { hasta: 1250, c: 65 }, { hasta: 1625, c: 85 }, { hasta: 2000, c: 105 }, { hasta: 2375, c: 125 }, { hasta: 2625, c: 145 }, { hasta: 2875, c: 160 }, { hasta: 3125, c: 175 }, { hasta: 3500, c: 190 }, { hasta: 3875, c: 210 }, { hasta: 5000, c: 285 }] },
         { tipo: "Robo y Hurto", meses: 18, rangos: [{ hasta: 450, c: 35 }, { hasta: 650, c: 55 }, { hasta: 900, c: 75 }, { hasta: 1250, c: 90 }, { hasta: 1625, c: 116 }, { hasta: 2000, c: 145 }, { hasta: 2375, c: 175 }, { hasta: 2625, c: 200 }, { hasta: 2875, c: 220 }, { hasta: 3125, c: 240 }, { hasta: 3500, c: 265 }, { hasta: 3875, c: 295 }, { hasta: 5000, c: 400 }] },
-        { tipo: "Robo y Hurto", meses: 24, rangos: [{ hasta: 450, c: 40 }, { hasta: 650, c: 60 }, { hasta: 900, c: 85 }, { hasta: 1250, c: 100 }, { hasta: 1625, c: 135 }, { hasta: 2000, c: 170 }, { hasta: 2375, c: 200 }, { hasta: 2625, c: 230 }, { hasta: 2875, c: 255 }, { hasta: 3125, c: 275 }, { hasta: 3500, c: 305 }, { hasta: 3875, c: 340 }, { hasta: 5000, c: 455 }] },
+        { tipo: "Robo y Hurto", meses: 24, rangos: [{ hasta: 450, c: 40 }, { hasta: 650, c: 60 }, { hasta: 900, c: 85 }, { hasta: 1250, c: 100 }, { hasta: 135, c: 135 }, { hasta: 2000, c: 170 }, { hasta: 2375, c: 200 }, { hasta: 2625, c: 230 }, { hasta: 2875, c: 255 }, { hasta: 3125, c: 275 }, { hasta: 3500, c: 305 }, { hasta: 3875, c: 340 }, { hasta: 5000, c: 455 }] },
         { tipo: "Servicio Robo", meses: 12, rangos: [{ hasta: 450, c: 50 }, { hasta: 650, c: 80 }, { hasta: 900, c: 110 }, { hasta: 1250, c: 130 }, { hasta: 1625, c: 170 }, { hasta: 2000, c: 210 }, { hasta: 2375, c: 260 }, { hasta: 2625, c: 295 }, { hasta: 2875, c: 325 }, { hasta: 3125, c: 350 }, { hasta: 3500, c: 390 }, { hasta: 3875, c: 435 }, { hasta: 5000, c: 570 }] },
         { tipo: "Servicio Robo", meses: 18, rangos: [{ hasta: 450, c: 70 }, { hasta: 650, c: 110 }, { hasta: 900, c: 155 }, { hasta: 1250, c: 185 }, { hasta: 235, c: 235 }, { hasta: 2000, c: 300 }, { hasta: 2375, c: 360 }, { hasta: 2625, c: 410 }, { hasta: 2875, c: 450 }, { hasta: 3125, c: 495 }, { hasta: 3500, c: 545 }, { hasta: 3875, c: 605 }, { hasta: 5000, c: 800 }] },
         { tipo: "Servicio Robo", meses: 24, rangos: [{ hasta: 450, c: 80 }, { hasta: 650, c: 125 }, { hasta: 900, c: 175 }, { hasta: 1250, c: 210 }, { hasta: 270, c: 270 }, { hasta: 2000, c: 340 }, { hasta: 2375, c: 410 }, { hasta: 2625, c: 470 }, { hasta: 2875, c: 515 }, { hasta: 3125, c: 565 }, { hasta: 3500, c: 620 }, { hasta: 3875, c: 690 }, { hasta: 5000, c: 915 }] }
