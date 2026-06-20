@@ -661,7 +661,7 @@ function recomendar() {
         }
         if (opc.tipo === 'combo' && opc.detalles.length > 0) {
             opc.detalles.forEach(acc => {
-                htmlTarjeta += `<div class="item-linea"><span>• Acceso. ${acc.nombre}</span> <span>${formatoUSD.format(acc.precio)}</span></div>`;
+                htmlTarjeta += `<div class="item-linea"><span>• ${acc.nombre}</span> <span>${formatoUSD.format(acc.precio)}</span></div>`;
             });
         }
 
