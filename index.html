@@ -6,59 +6,106 @@
 <title>Cuota Cliente - iShop</title>
 
 <style>
-/* ESTILO BLANCO MINIMALISTA DE APPLE */
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: #f5f5f7;
-    color: #1d1d1f;
-    text-align: center;
-    padding: 20px;
+/* ═══════════════════════════════════════════
+   ESTILO LIQUID GLASS — consistente con Control de Ventas iShop
+   ═══════════════════════════════════════════ */
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    background: #F5F5F7;
+    color: #1D1D1F;
     min-height: 100vh;
+    padding: 40px 20px;
+    position: relative;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    -webkit-font-smoothing: antialiased;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
+/* ORBES DE COLOR DE FONDO */
+.s-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.6;
+    z-index: 0;
+    pointer-events: none;
+}
+.s-orb-blue   { width: 380px; height: 380px; background: rgba(147,197,253,0.7); top: -80px; left: -100px; }
+.s-orb-orange { width: 320px; height: 320px; background: rgba(253,186,116,0.55); bottom: -100px; right: -80px; }
+
+/* TARJETA LIQUID GLASS */
 .container {
-    background: #ffffff;
-    padding: 35px 28px;
-    border-radius: 20px;
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.85);
+    padding: 32px 28px;
+    border-radius: 22px;
     width: 100%;
     max-width: 520px;
     box-sizing: border-box;
-    box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.04);
-    border: 1px solid #d2d2d7;
-}
-
-h2 {
-    font-size: 26px;
-    font-weight: 600;
-    letter-spacing: -0.022em;
-    margin-top: 0;
-    margin-bottom: 8px;
-    color: #1d1d1f;
+    box-shadow:
+        0 2px 20px rgba(0,0,0,0.06),
+        inset 0 1px 0 rgba(255,255,255,0.92);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
     text-align: center;
 }
 
+/* Reflejo especular sutil, como el resto de la app */
+.container::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9) 40%, rgba(255,255,255,0.9) 60%, transparent);
+    pointer-events: none;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.022em;
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: #1D1D1F;
+    position: relative;
+    z-index: 1;
+}
+
 p.subtitle {
-    color: #86868b;
-    font-size: 14px;
+    color: #86868B;
+    font-size: 13px;
     margin-bottom: 24px;
     margin-top: 0;
+    position: relative;
+    z-index: 1;
 }
 
 .form-group {
     text-align: left;
     margin-bottom: 18px;
+    position: relative;
+    z-index: 1;
 }
 
 .form-inline {
     display: flex;
     gap: 12px;
     margin-bottom: 18px;
+    position: relative;
+    z-index: 1;
 }
 
 .form-inline .form-group {
@@ -68,112 +115,137 @@ p.subtitle {
 
 label {
     display: block;
-    font-size: 11px;
-    font-weight: 600;
-    color: #86868b;
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(0,0,0,0.4);
     margin-bottom: 6px;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    text-align: center;
+    letter-spacing: 0.06em;
+    text-align: left;
 }
 
 select, input[type="number"] {
     width: 100%;
-    padding: 14px;
+    padding: 12px 14px;
     border-radius: 12px;
-    border: 1px solid #d2d2d7;
-    background: #ffffff;
-    color: #1d1d1f;
-    font-size: 16px;
+    border: 1px solid rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.6);
+    color: #1D1D1F;
+    font-size: 14px;
     font-weight: 400;
     box-sizing: border-box;
     outline: none;
-    transition: border-color 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 select:focus, input[type="number"]:focus {
-    border-color: #E86518;
+    border-color: #0071E3;
+    box-shadow: 0 0 0 3px rgba(0,113,227,0.15);
 }
 
+/* CHECKBOX GROUP */
 .checkbox-group {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     gap: 10px;
     margin-bottom: 18px;
-    padding-left: 4px;
+    padding: 12px 14px;
+    background: rgba(255,255,255,0.45);
+    border: 1px solid rgba(255,255,255,0.85);
+    border-radius: 14px;
     cursor: pointer;
     user-select: none;
+    position: relative;
+    z-index: 1;
 }
 
 .checkbox-group input {
     width: 18px;
     height: 18px;
     cursor: pointer;
-    accent-color: #E86518;
+    accent-color: #0071E3;
+    flex-shrink: 0;
 }
 
 .checkbox-group label {
     display: inline;
     font-size: 14px;
     font-weight: 500;
-    color: #1d1d1f;
+    color: #1D1D1F;
     text-transform: none;
     letter-spacing: normal;
     cursor: pointer;
+    margin-bottom: 0;
 }
 
+/* BOTONES */
 button {
-    background: #E86518;
+    background: #0071E3;
     color: #ffffff;
     border: none;
     width: 100%;
-    padding: 14px;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 500;
+    padding: 13px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
     margin-top: 10px;
-    transition: background 0.2s ease;
+    transition: background 0.2s ease, transform 0.1s ease;
+    position: relative;
+    z-index: 1;
 }
 
 button:hover {
-    background: #0077ed;
+    background: #0077ED;
+}
+
+button:active {
+    background: #0062C4;
+    transform: scale(0.98);
 }
 
 #capacidad-total {
     margin-top: 20px;
-    font-size: 15px;
-    color: #6e6e73;
+    font-size: 13px;
+    color: #6E6E73;
+    position: relative;
+    z-index: 1;
 }
 
 #resultados-container {
     margin-top: 20px;
     text-align: left;
     display: none;
+    position: relative;
+    z-index: 1;
 }
 
+/* TARJETAS DE RECOMENDACIÓN, mismo lenguaje visual que accesorio-item */
 .tarjeta-recomendacion {
-    background: #f5f5f7;
-    border: 1px solid #e8e8ed;
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 16px;
+    background: rgba(255,255,255,0.45);
+    border: 1px solid rgba(255,255,255,0.85);
+    border-radius: 14px;
+    padding: 18px 16px;
+    margin-bottom: 14px;
 }
 
 .tarjeta-recomendacion h3 {
     margin: 0 0 4px 0;
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 700;
+    color: #1D1D1F;
 }
 
 .tag-tipo {
     display: inline-block;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 10px;
     border-radius: 20px;
     margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
 .tag-solo { background: #e3f2fd; color: #0d47a1; }
@@ -182,141 +254,126 @@ button:hover {
 .tag-descuento {
     background: #e8f5e9;
     color: #24b23e;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 10px;
     border-radius: 20px;
     display: inline-block;
     margin-left: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
 .precio-principal {
     font-size: 22px;
-    font-weight: 600;
-    color: #1d1d1f;
+    font-weight: 700;
+    color: #1D1D1F;
     margin-bottom: 12px;
 }
 
 .precio-principal span {
     font-size: 14px;
-    color: #86868b;
+    color: #86868B;
     font-weight: 400;
 }
 
 .precio-antes {
     text-decoration: line-through;
-    color: #86868b;
+    color: #86868B;
     font-size: 13px;
     margin-bottom: 4px;
 }
 
 .desglose-combo {
-    border-top: 1px solid #d2d2d7;
+    border-top: 1px solid rgba(0,0,0,0.1);
     padding-top: 10px;
     margin-top: 10px;
-    font-size: 14px;
-    color: #515154;
+    font-size: 13px;
+    color: #6E6E73;
 }
 
-.item-linea {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 4px;
-}
+.item-linea { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.monto-total-financiado { font-size: 12px; color: #6E6E73; margin-bottom: 8px; }
+.item-linea-equipo { color: #6E6E73; }
+.item-linea-garex { color: #0071E3; }
+.item-linea-seguro { color: #1b5e20; }
 
-/* ESTILOS DE CONTENEDOR PARA EL LOGO INTELIGENTE */
 .logo-final {
-    margin-top: 30px;
-    display: inline-block;
-}
-
-.logo-final img {
     max-width: 110px;
     height: auto;
+    margin-top: 30px;
     opacity: 0.5;
     transition: opacity 0.2s ease;
+    display: inline-block;
+    position: relative;
+    z-index: 1;
 }
 
-.logo-final img:hover {
+.logo-final:hover {
     opacity: 0.9;
 }
 
+/* RESPONSIVE MÓVIL OPTIMIZADO */
 @media (max-width: 480px) {
-    body { padding: 12px; background: #ffffff; }
-    .container { padding: 16px 8px; box-shadow: none; border: none; }
-    h2 { font-size: 24px; }
+    body { padding: 20px 12px; }
+    .container { padding: 24px 18px; }
+    h2 { font-size: 20px; }
+    select, input[type="number"] { padding: 14px; font-size: 16px; }
     .form-inline { flex-direction: column; gap: 12px; }
+    .checkbox-group { flex-direction: column; align-items: flex-start; gap: 8px; }
 }
 
-/* ==========================================
-   IMPLEMENTACIÓN MODO OSCURO (SISTEMA)
-   ========================================== */
+/* MODO OSCURO — 100% automático vía CSS, sigue el tema del sistema operativo */
 @media (prefers-color-scheme: dark) {
     body {
         background: #000000;
-        color: #f5f5f7;
+        color: #F2F2F7;
     }
-
     .container {
-        background: #1c1c1e;
-        border-color: #2c2c2e;
-        box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.25);
+        background: rgba(255,255,255,0.06);
+        border-color: rgba(255,255,255,0.12);
     }
-
-    h2, .checkbox-group label, .tarjeta-recomendacion h3 {
-        color: #ffffff;
-    }
-
-    p.subtitle, #capacidad-total, .precio-principal span, .precio-antes, .desglose-combo {
-        color: #86868b;
-    }
-
+    h2 { color: #ffffff; }
+    p.subtitle { color: rgba(255,255,255,0.5); }
+    label { color: rgba(255,255,255,0.5); }
     select, input[type="number"] {
-        background: #2c2c2e;
-        border-color: #3a3a3c;
+        background: rgba(255,255,255,0.08);
+        border-color: rgba(255,255,255,0.15);
         color: #ffffff;
     }
-
-    select:focus, input[type="number"]:focus {
-        border-color: #0a84ff;
+    .checkbox-group {
+        background: rgba(255,255,255,0.06);
+        border-color: rgba(255,255,255,0.12);
     }
-
+    .checkbox-group label { color: #ffffff; }
+    #capacidad-total { color: rgba(255,255,255,0.6); }
     .tarjeta-recomendacion {
-        background: #2c2c2e;
-        border-color: #3a3a3c;
+        background: rgba(255,255,255,0.06);
+        border-color: rgba(255,255,255,0.12);
     }
-
-    .precio-principal {
-        color: #ffffff;
+    .tarjeta-recomendacion h3 { color: #ffffff; }
+    .precio-principal { color: #ffffff; }
+    .precio-principal span { color: rgba(255,255,255,0.5); }
+    .precio-antes { color: rgba(255,255,255,0.5); }
+    .desglose-combo {
+        border-top-color: rgba(255,255,255,0.15);
+        color: rgba(255,255,255,0.7);
     }
-
-    .tag-solo { 
-        background: #0a2f5c; 
-        color: #409fff; 
-    }
-    
-    .tag-combo { 
-        background: #0f3d1b; 
-        color: #52d369; 
-    }
-
-    /* Ajuste elegante del logo en modo oscuro sin invertir sus colores */
-    .logo-final img {
-        opacity: 0.7;
-    }
-    
-    .logo-final img:hover {
-        opacity: 1;
-    }
-    
-    /* Pequeño ajuste responsive en modo oscuro */
-    @media (max-width: 480px) {
-        body { background: #1c1c1e; }
-    }
+    .item-linea { color: rgba(255,255,255,0.7); }
+    .monto-total-financiado { color: rgba(255,255,255,0.5); }
+    .item-linea-equipo { color: rgba(255,255,255,0.5); }
+    .item-linea-garex { color: #4da3ff; }
+    .item-linea-seguro { color: #7fe08a; }
+    .tag-solo { background: rgba(13,71,161,0.35); color: #90caf9; }
+    .tag-combo { background: rgba(27,94,32,0.35); color: #a5d6a7; }
+    .tag-descuento { background: rgba(27,94,32,0.35); color: #7fe08a; }
 }
 </style>
 </head>
 <body>
+
+<div class="s-orb s-orb-blue"></div>
+<div class="s-orb s-orb-orange"></div>
 
 <div class="container">
 
@@ -370,10 +427,7 @@ button:hover {
     <div id="capacidad-total"></div>
     <div id="resultados-container"></div>
 
-    <picture class="logo-final">
-        <source srcset="logo-ishop-blanco.png" media="(prefers-color-scheme: dark)">
-        <img src="logo-ishop.png" alt="Logo corporativo">
-    </picture>
+    <img src="logo-ishop.png" alt="Logo corporativo" class="logo-final">
 
 </div>
 
@@ -404,7 +458,7 @@ const productos = [
     { categoria: "MacBook", nombre: "MacBook Neo - 256GB", precio: 779 },
     { categoria: "MacBook", nombre: "MacBook Neo - 512GB", precio: 899 },
     { categoria: "MacBook", nombre: "MacBook Air 13 M5 - 512GB", precio: 1469 },
-    { categoria: "MacBook", font: "MacBook", nombre: "MacBook Air 13 M5 - 1TB", precio: 1769 },
+    { categoria: "MacBook", nombre: "MacBook Air 13 M5 - 1TB", precio: 1769 },
     { categoria: "MacBook", nombre: "MacBook Air 15 M5 - 512GB", precio: 1769 },
     { categoria: "MacBook", nombre: "MacBook Air 15 M5 - 1TB", precio: 2039 },
     { categoria: "MacBook", nombre: "MacBook Pro 14 M5 - 512GB", precio: 2099 },
@@ -424,17 +478,17 @@ const productos = [
     { categoria: "Watch", nombre: "Apple Watch SE3 - 40mm", precio: 359 },
     { categoria: "Watch", nombre: "Apple Watch SE3 - 44mm", precio: 399 },
     { categoria: "Watch", nombre: "Apple Watch Series 11 - 42mm", precio: 579 },
-    { categoria: "Watch", font: "Watch", nombre: "Apple Watch Series 11 - 46mm", precio: 619 }
+    { categoria: "Watch", nombre: "Apple Watch Series 11 - 46mm", precio: 619 }
 ];
 
 // MATRIZ DE CONFIGURACIÓN GAREX
 const dbGarex = {
     "iPhone": [
-        { mesesAdic: 12, rangos: [{ hasta: 250, costo: 13.33 }, { hasta: 500, costo: 26.67 }, { hasta: 1000, costo: 33.33 }, { hasta: 1500, costo: 40 }, { hasta: 2000, costo: 46.67 }, { hasta: 2500, costo: 50 }] },
-        { mesesAdic: 24, rangos: [{ hasta: 250, costo: 20 }, { hasta: 500, costo: 40 }, { hasta: 1000, costo: 50 }, { hasta: 1500, costo: 60 }, { hasta: 2000, costo: 70 }, { hasta: 2500, costo: 75 }] }
+        { mesesAdic: 12, rangos: [{ hasta: 250, costo: 45 }, { hasta: 500, costo: 75 }, { hasta: 1000, costo: 115 }, { hasta: 1500, costo: 145 }, { hasta: 2000, costo: 185 }, { hasta: 2500, costo: 225 }] },
+        { mesesAdic: 24, rangos: [{ hasta: 250, costo: 75 }, { hasta: 500, costo: 115 }, { hasta: 1000, costo: 175 }, { hasta: 1500, costo: 225 }, { hasta: 2000, costo: 285 }, { hasta: 2500, costo: 340 }] }
     ],
     "Otros": [
-        { mesesAdic: 36, rangos: [{ hasta: 50, costo: 6 }, { hasta: 100, costo: 10 }, { hasta: 250, costo: 20 }, { hasta: 500, costo: 40 }, { hasta: 1000, costo: 50 }, { hasta: 1500, costo: 60 }, { hasta: 2000, costo: 70 }, { hasta: 2500, costo: 75 }, { hasta: 3000, costo: 85 }, { hasta: 5000, costo: 110 }] }
+        { mesesAdic: 36, rangos: [{ hasta: 50, costo: 15 }, { hasta: 100, costo: 25 }, { hasta: 250, costo: 45 }, { hasta: 500, costo: 75 }, { hasta: 1000, costo: 115 }, { hasta: 1500, costo: 155 }, { hasta: 2000, costo: 195 }, { hasta: 2500, costo: 240 }, { hasta: 3000, costo: 290 }, { hasta: 5000, costo: 390 }] }
     ]
 };
 
@@ -442,7 +496,7 @@ const dbGarex = {
 const dbSeguros = {
     "iPhone": [
         { tipo: "Robo y Hurto", meses: 12, rangos: [{ hasta: 450, c: 40 }, { hasta: 650, c: 64 }, { hasta: 900, c: 90 }, { hasta: 1250, c: 95 }, { hasta: 1625, c: 140 }, { hasta: 2000, c: 175 }, { hasta: 2375, c: 210 }, { hasta: 3000, c: 255 }] },
-        { tipo: "Robo y Hurto", meses: 18, rangos: [{ hasta: 450, c: 55 }, { hasta: 650, c: 90 }, { hasta: 1250, c: 135 }, { hasta: 1625, c: 195 }, { hasta: 2000, c: 245 }, { hasta: 2375, c: 295 }, { hasta: 3000, c: 360 }] },
+        { tipo: "Robo y Hurto", meses: 18, rangos: [{ hasta: 450, c: 55 }, { hasta: 650, c: 90 }, { hasta: 900, c: 125 }, { hasta: 1250, c: 135 }, { hasta: 1625, c: 195 }, { hasta: 2000, c: 245 }, { hasta: 2375, c: 295 }, { hasta: 3000, c: 360 }] },
         { tipo: "Robo y Hurto", meses: 24, rangos: [{ hasta: 450, c: 65 }, { hasta: 650, c: 105 }, { hasta: 900, c: 140 }, { hasta: 1250, c: 150 }, { hasta: 1625, c: 220 }, { hasta: 2000, c: 280 }, { hasta: 2375, c: 340 }, { hasta: 3000, c: 410 }] },
         { tipo: "Robo + Accidental", meses: 12, rangos: [{ hasta: 450, c: 80 }, { hasta: 650, c: 130 }, { hasta: 900, c: 185 }, { hasta: 1250, c: 195 }, { hasta: 1625, c: 280 }, { hasta: 2000, c: 355 }, { hasta: 2375, c: 430 }, { hasta: 3000, c: 520 }] },
         { tipo: "Robo + Accidental", meses: 18, rangos: [{ hasta: 450, c: 115 }, { hasta: 650, c: 180 }, { hasta: 900, c: 255 }, { hasta: 1250, c: 275 }, { hasta: 1625, c: 395 }, { hasta: 2000, c: 495 }, { hasta: 2375, c: 600 }, { hasta: 3000, c: 730 }] },
@@ -459,26 +513,26 @@ const dbSeguros = {
     "iPad": [
         { tipo: "Robo y Hurto", meses: 12, rangos: [{ hasta: 450, c: 25 }, { hasta: 650, c: 40 }, { hasta: 900, c: 55 }, { hasta: 1250, c: 65 }, { hasta: 1625, c: 85 }, { hasta: 2000, c: 105 }, { hasta: 2375, c: 125 }, { hasta: 2625, c: 145 }, { hasta: 2875, c: 160 }, { hasta: 3125, c: 175 }, { hasta: 3500, c: 190 }, { hasta: 3875, c: 210 }, { hasta: 5000, c: 285 }] },
         { tipo: "Robo y Hurto", meses: 18, rangos: [{ hasta: 450, c: 35 }, { hasta: 650, c: 55 }, { hasta: 900, c: 75 }, { hasta: 1250, c: 90 }, { hasta: 1625, c: 116 }, { hasta: 2000, c: 145 }, { hasta: 2375, c: 175 }, { hasta: 2625, c: 200 }, { hasta: 2875, c: 220 }, { hasta: 3125, c: 240 }, { hasta: 3500, c: 265 }, { hasta: 3875, c: 295 }, { hasta: 5000, c: 400 }] },
-        { tipo: "Robo y Hurto", meses: 24, rangos: [{ hasta: 450, c: 40 }, { hasta: 650, c: 60 }, { hasta: 900, c: 85 }, { hasta: 1250, c: 100 }, { hasta: 135, c: 135 }, { hasta: 2000, c: 170 }, { hasta: 2375, c: 200 }, { hasta: 2625, c: 230 }, { hasta: 2875, c: 255 }, { hasta: 3125, c: 275 }, { hasta: 3500, c: 305 }, { hasta: 340, c: 340 }, { hasta: 5000, c: 455 }] },
+        { tipo: "Robo y Hurto", meses: 24, rangos: [{ hasta: 450, c: 40 }, { hasta: 650, c: 60 }, { hasta: 900, c: 85 }, { hasta: 1250, c: 100 }, { hasta: 1625, c: 135 }, { hasta: 2000, c: 170 }, { hasta: 2375, c: 200 }, { hasta: 2625, c: 230 }, { hasta: 2875, c: 255 }, { hasta: 3125, c: 275 }, { hasta: 3500, c: 305 }, { hasta: 3875, c: 340 }, { hasta: 5000, c: 455 }] },
         { tipo: "Servicio Robo", meses: 12, rangos: [{ hasta: 450, c: 50 }, { hasta: 650, c: 80 }, { hasta: 900, c: 110 }, { hasta: 1250, c: 130 }, { hasta: 1625, c: 170 }, { hasta: 2000, c: 210 }, { hasta: 2375, c: 260 }, { hasta: 2625, c: 295 }, { hasta: 2875, c: 325 }, { hasta: 3125, c: 350 }, { hasta: 3500, c: 390 }, { hasta: 3875, c: 435 }, { hasta: 5000, c: 570 }] },
         { tipo: "Servicio Robo", meses: 18, rangos: [{ hasta: 450, c: 70 }, { hasta: 650, c: 110 }, { hasta: 900, c: 155 }, { hasta: 1250, c: 185 }, { hasta: 235, c: 235 }, { hasta: 2000, c: 300 }, { hasta: 2375, c: 360 }, { hasta: 2625, c: 410 }, { hasta: 2875, c: 450 }, { hasta: 3125, c: 495 }, { hasta: 3500, c: 545 }, { hasta: 3875, c: 605 }, { hasta: 5000, c: 800 }] },
         { tipo: "Servicio Robo", meses: 24, rangos: [{ hasta: 450, c: 80 }, { hasta: 650, c: 125 }, { hasta: 900, c: 175 }, { hasta: 1250, c: 210 }, { hasta: 270, c: 270 }, { hasta: 2000, c: 340 }, { hasta: 2375, c: 410 }, { hasta: 2625, c: 470 }, { hasta: 2875, c: 515 }, { hasta: 3125, c: 565 }, { hasta: 3500, c: 620 }, { hasta: 3875, c: 690 }, { hasta: 5000, c: 915 }] }
     ],
     "Watch": [
-        { tipo: "Servicio Robo", meses: 12, rangos: [{ hasta: 450, c: 15 }, { hasta: 650, c: 25 }, { hasta: 900, c: 35 }, { hasta: 1150, c: 45 }, { hasta: 1400, c: 55 }] },
-        { tipo: "Servicio Robo", meses: 18, rangos: [{ hasta: 450, c: 20 }, { hasta: 650, c: 30 }, { hasta: 900, c: 45 }, { hasta: 1150, c: 60 }, { hasta: 1400, c: 75 }] },
-        { tipo: "Servicio Robo", meses: 24, rangos: [{ hasta: 450, c: 25 }, { hasta: 650, c: 40 }, { hasta: 900, c: 50 }, { hasta: 1150, c: 70 }, { hasta: 1400, c: 85 }] },
-        { tipo: "Robo + Accidental", meses: 12, rangos: [{ hasta: 450, c: 45 }, { hasta: 650, c: 70 }, { hasta: 900, c: 95 }, { hasta: 1150, c: 110 }, { hasta: 1400, c: 130 }] },
-        { tipo: "Robo + Accidental", meses: 18, rangos: [{ hasta: 450, c: 60 }, { hasta: 650, c: 95 }, { hasta: 900, c: 135 }, { hasta: 1150, c: 155 }, { hasta: 1400, c: 185 }] },
-        { tipo: "Robo + Accidental", meses: 24, rangos: [{ hasta: 450, c: 70 }, { hasta: 650, c: 110 }, { hasta: 900, c: 155 }, { hasta: 1150, c: 175 }, { hasta: 1400, c: 210 }] }
+        { tipo: "Servicio Robo", meses: 12, rangos: [{ hasta: 450, c: 1 }, { hasta: 650, c: 2 }, { hasta: 900, c: 3 }, { hasta: 1150, c: 4 }, { hasta: 1400, c: 5 }] },
+        { tipo: "Servicio Robo", meses: 18, rangos: [{ hasta: 450, c: 1 }, { hasta: 650, c: 2 }, { hasta: 900, c: 3 }, { hasta: 1150, c: 4 }, { hasta: 1400, c: 5 }] },
+        { tipo: "Servicio Robo", meses: 24, rangos: [{ hasta: 450, c: 1 }, { hasta: 650, c: 2 }, { hasta: 900, c: 3 }, { hasta: 1150, c: 4 }, { hasta: 1400, c: 5 }] },
+        { tipo: "Robo + Accidental", meses: 12, rangos: [{ hasta: 450, c: 1 }, { hasta: 650, c: 2 }, { hasta: 900, c: 3 }, { hasta: 1150, c: 4 }, { hasta: 1400, c: 5 }] },
+        { tipo: "Robo + Accidental", meses: 18, rangos: [{ hasta: 450, c: 1 }, { hasta: 650, c: 2 }, { hasta: 900, c: 3 }, { hasta: 1150, c: 4 }, { hasta: 1400, c: 5 }] },
+        { tipo: "Robo + Accidental", meses: 24, rangos: [{ hasta: 450, c: 1 }, { hasta: 650, c: 2 }, { hasta: 900, c: 3 }, { hasta: 1150, c: 4 }, { hasta: 1400, c: 5 }] }
     ]
 };
 
 const accesoriosDB = {
-    iPhone: [{ nombre: "Case Apple", precio: 69, esProteccion: true }, { nombre: "JBL GO 4", precio: 59, esProteccion: true }, { nombre: "Vidrio Temperado de Privacidad", precio: 42, esProteccion: true }, { nombre: "Protector de Cámaras", precio: 24, esProteccion: true }, { nombre: "Base de Carga Belkin 3-1", precio: 119, esProteccion: true }, { nombre: "iKlear", precio: 42, esProteccion: true }, { nombre: "Wallet Apple", precio: 84, esProteccion: true }, { nombre: "Cargador Apple 40W", precio: 49, esProteccion: true }],
-    MacBook: [{ nombre: "Funda", precio: 39, esProteccion: true }, { nombre: "JBL GO 4", precio: 59, esProteccion: true }, { nombre: "HardCase", precio: 59, esProteccion: true }, { nombre: "Multiport Hub USB-C", precio: 74, esProteccion: true }, { nombre: "Teclado numérico", precio: 49, esProteccion: true }, { nombre: "iKlear", precio: 42, esProteccion: true },{ nombre: "Office 365", precio: 94, esProteccion: true }],
-    iPad: [{ nombre: "Case", precio: 59, esProteccion: true }, { nombre: "JBL GO 4", precio: 59, esProteccion: true }, { nombre: "iKlear", precio: 42, esProteccion: true }, { nombre: "Vidrio Temperado", precio: 39, esProteccion: true }, { nombre: "Apple Pencil USB-C", precio: 132, esProteccion: true }],
-    Watch: [{ nombre: "Bumper", precio: 29, esProteccion: true }, { nombre: "JBL GO 4", precio: 59, esProteccion: true }, { nombre: "iKlear", precio: 42, esProteccion: true }, { nombre: "Banda Apple", precio: 64, esProteccion: true }, { nombre: "Cargador Apple 20W", precio: 32, esProteccion: true }, { nombre: "Base de Carga Belkin 3-1", precio: 119, esProteccion: true }]
+    iPhone: [{ nombre: "Case Apple", precio: 69, esProteccion: true }, { nombre: "Vidrio Temperado de Privacidad", precio: 42, esProteccion: true }, { nombre: "Protector de Cámaras", precio: 24, esProteccion: true }, { nombre: "Base de Carga Belkin 3-1", precio: 119, esProteccion: true }, { nombre: "iKlear", precio: 42, esProteccion: true }, { nombre: "Wallet Apple", precio: 84, esProteccion: true }, { nombre: "Cargador Apple 40W", precio: 49, esProteccion: true }],
+    MacBook: [{ nombre: "Funda", precio: 39, esProteccion: true }, { nombre: "HardCase", precio: 59, esProteccion: true }, { nombre: "Multiport Hub USB-C", precio: 74, esProteccion: true }, { nombre: "Teclado numérico", precio: 49, esProteccion: true }, { nombre: "iKlear", precio: 42, esProteccion: true },{ nombre: "Office 365", precio: 94, esProteccion: true }],
+    iPad: [{ nombre: "Case", precio: 59, esProteccion: true }, { nombre: "iKlear", precio: 42, esProteccion: true }, { nombre: "Vidrio Temperado", precio: 39, esProteccion: true }, { nombre: "Apple Pencil USB-C", precio: 132, esProteccion: true }],
+    Watch: [{ nombre: "Bumper", precio: 29, esProteccion: true }, { nombre: "iKlear", precio: 42, esProteccion: true }, { nombre: "Banda Apple", precio: 64, esProteccion: true }, { nombre: "Cargador Apple 20W", precio: 32, esProteccion: true }, { nombre: "Base de Carga Belkin 3-1", precio: 119, esProteccion: true }]
 };
 const opcionesAirPods = [{ nombre: "AirPods 4", precio: 179 }, { nombre: "AirPods Pro 3", precio: 329 }];
 
@@ -567,11 +621,11 @@ function recomendar() {
     
     if (!cuota || !meses) return;
 
-    let capacityTotal = cuota * meses;
+    let capacidadTotal = cuota * meses;
     let formatoUSD = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 
     document.getElementById("capacidad-total").innerHTML = 
-        `Capacidad total de compra: <b>${formatoUSD.format(capacityTotal)}</b> a ${meses} meses.`;
+        `Capacidad total de compra: <b>${formatoUSD.format(capacidadTotal)}</b> a ${meses} meses.`;
 
     let contenedor = document.getElementById("resultados-container");
     contenedor.innerHTML = "";
@@ -589,9 +643,9 @@ function recomendar() {
         let costoSeguro = obtenerCostoSeguro(prod.categoria, precioFinalEquipo, seguroSel);
         let subtotalConAgregados = precioFinalEquipo + costoGarex + costoSeguro;
 
-        if (subtotalConAgregados <= capacityTotal + 15) {
+        if (subtotalConAgregados <= capacidadTotal + 15) {
             
-            if (soloDispositivo || subtotalConAgregados >= capacityTotal * 0.95) {
+            if (soloDispositivo || subtotalConAgregados >= capacidadTotal * 0.95) {
                 opcionesEncontradas.push({
                     tipo: "solo",
                     producto: prod,
@@ -605,7 +659,7 @@ function recomendar() {
                     detalles: []
                 });
             } else {
-                let dineroParaAccesorios = capacityTotal - subtotalConAgregados;
+                let dineroParaAccesorios = capacidadTotal - subtotalConAgregados;
                 let comboAccesorios = armarComboAccesorios(prod.categoria, dineroParaAccesorios);
                 let totalCombo = subtotalConAgregados + comboAccesorios.totalAccesorios;
 
@@ -647,22 +701,22 @@ function recomendar() {
                 <div class="precio-principal">
                     ${formatoUSD.format(opc.cuotaReal)} <span>/ mes</span>
                 </div>
-                <div style="font-size:13px; color:#6e6e73; margin-bottom: 8px;">Monto total financiado: ${formatoUSD.format(opc.total)}</div>
+                <div class="monto-total-financiado">Monto total financiado: ${formatoUSD.format(opc.total)}</div>
                 
-                <div class="desglose-combo" style="border-top: 1px solid #e8e8ed; padding-top: 8px;">
-                    <strong>Desglose de la cuota:</strong>
-                    <div class="item-linea" style="color:#6e6e73;"><span>• Equipo Principal</span> <span>${formatoUSD.format(opc.precioEquipo)}</span></div>
+                <div class="desglose-combo">
+                    <strong>Desglose la cuota:</strong>
+                    <div class="item-linea item-linea-equipo"><span>• Equipo Principal</span> <span>${formatoUSD.format(opc.precioEquipo)}</span></div>
         `;
 
         if(opc.costoGarex > 0) {
-            htmlTarjeta += `<div class="item-linea" style="color:#0071e3;"><span>• Garantía Garex (+${garexSel}m)</span> <span>${formatoUSD.format(opc.costoGarex)}</span></div>`;
+            htmlTarjeta += `<div class="item-linea item-linea-garex"><span>• Garantía Garex (+${garexSel}m)</span> <span>${formatoUSD.format(opc.costoGarex)}</span></div>`;
         }
         if(opc.costoSeguro > 0) {
-            htmlTarjeta += `<div class="item-linea" style="color:#1b5e20;"><span>• Seguro (${seguroSel.split("-")[0]} - ${seguroSel.split("-")[1]}m)</span> <span>${formatoUSD.format(opc.costoSeguro)}</span></div>`;
+            htmlTarjeta += `<div class="item-linea item-linea-seguro"><span>• Seguro (${seguroSel.split("-")[0]} - ${seguroSel.split("-")[1]}m)</span> <span>${formatoUSD.format(opc.costoSeguro)}</span></div>`;
         }
         if (opc.tipo === 'combo' && opc.detalles.length > 0) {
             opc.detalles.forEach(acc => {
-                htmlTarjeta += `<div class="item-linea"><span>• ${acc.nombre}</span> <span>${formatoUSD.format(acc.precio)}</span></div>`;
+                htmlTarjeta += `<div class="item-linea"><span>• Acceso. ${acc.nombre}</span> <span>${formatoUSD.format(acc.precio)}</span></div>`;
             });
         }
 
